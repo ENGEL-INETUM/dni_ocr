@@ -90,7 +90,7 @@
   }
 
   dniScanner.addEventListener('click', () => {
-    if (!isTablet || isMobile) {
+    if (!isTablet || !isMobile) {
       const scannedResult = scanDNI();
       dniResult.textContent = `DNI escaneado: ${scannedResult}`;
     } else {
