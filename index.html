@@ -88,7 +88,7 @@
       </div>
       <!-- Botón de captura -->
       <button id="captureButton">
-        <i class="fas fa-camera"></i> 
+        <i class="fas fa-camera"></i>
       </button>
       <!-- Imagen capturada -->
       <img id="capturedImage" alt="Capturada" />
@@ -149,8 +149,12 @@
           // Verifica si la cámara ya está activa para evitar solicitar el permiso nuevamente
           if (!isCameraActive) {
             // Accede a la cámara y establece el stream en el elemento de video
+            const videoConstraints = {
+              facingMode: { ideal: "environment" }, // Utiliza 'user' para la cámara delantera
+            };
+
             navigator.mediaDevices
-              .getUserMedia({ video: true })
+              .getUserMedia({ video: videoConstraints })
               .then((stream) => {
                 const video = document.getElementById("video");
                 video.srcObject = stream;
