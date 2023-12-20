@@ -71,6 +71,7 @@
 <script>
   const md = new MobileDetect(window.navigator.userAgent);
   const isTablet = md.tablet();
+  const isMobile = md.mobile();
 
   const dniScanner = document.getElementById('dniScanner');
   const dniResult = document.getElementById('dniResult');
@@ -80,7 +81,7 @@
   const cameraPreview = document.getElementById('cameraPreview');
   const scanButton = document.getElementById('scanButton');
 
-  if (isTablet) {
+  if (isTablet || isMobile) {
     dniScanner.style.display = 'none';
     qrScanner.style.display = 'block';
   } else {
@@ -89,7 +90,7 @@
   }
 
   dniScanner.addEventListener('click', () => {
-    if (!isTablet) {
+    if (!isTablet || isMobile) {
       const scannedResult = scanDNI();
       dniResult.textContent = `DNI escaneado: ${scannedResult}`;
     } else {
@@ -98,7 +99,7 @@
   });
 
   qrScanner.addEventListener('click', () => {
-    if (isTablet) {
+    if (isTablet || isMobile) {
       // Muestra la vista previa de la cámara y el botón de escaneo
       cameraPreview.style.display = 'block';
       scanButton.style.display = 'block';
