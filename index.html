@@ -31,10 +31,10 @@
       }
 
       #cameraPreview {
-        width: 300px;
-        height: 80px;
+        width: 100%;
+        height: 100px;
         border: 2px solid #333333;
-        background-color: #ffffff;
+        background-color: #5f5f5f;
         overflow: hidden;
         display: none; /* Ocultar inicialmente la vista previa de la cámara */
       }
@@ -69,6 +69,12 @@
         font-size: 16px;
         color: #333333;
       }
+
+      video {
+        object-fit: cover;
+        overflow-clip-margin: content-box;
+        overflow: clip;
+      }
     </style>
   </head>
   <body>
@@ -84,7 +90,7 @@
       <p id="qrResult"></p>
       <!-- Vista previa de la cámara -->
       <div id="cameraPreview">
-        <video id="video" width="100%" height="auto" autoplay></video>
+        <video id="video" autoplay></video>
       </div>
       <!-- Botón de captura -->
       <button id="captureButton">
@@ -158,6 +164,10 @@
               .then((stream) => {
                 const video = document.getElementById("video");
                 video.srcObject = stream;
+                video.addEventListener("loadedmetadata", () => {
+                  video.style.width = "300px";
+                  video.style.height = "100px";
+                });
                 isCameraActive = true; // Marca la cámara como activa
               })
               .catch((error) => {
@@ -182,8 +192,19 @@
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
         const video = document.getElementById("video");
+
+        // Establece las dimensiones deseadas para el canvas
+        const desiredWidth = 300;
+        const desiredHeight = 100;
+        // canvas.width = desiredWidth;
+        // canvas.height = desiredHeight;
+
+        // Asegúrate de que las dimensiones del canvas coincidan con las dimensiones reales del video
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
+
+        // Dibuja el video en el canvas con las nuevas dimensiones
+        // context.drawImage(video, 0, 0, desiredWidth, desiredHeight);
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
         // Convierte la imagen a base64
