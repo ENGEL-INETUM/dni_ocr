@@ -47,9 +47,8 @@
       border-radius: 4px;
       cursor: pointer;
       display: none;
-      background-image: url("camera.png");
+      /* background-image: url("camera.png"); */
       background-size: 20px;
-      /* Ajusta el tamaño según sea necesario */
       background-repeat: no-repeat;
       background-position: center;
     }
@@ -88,8 +87,6 @@
 
   <div id="qrScanner" class="scanner-container">
     <h3>QR Lector</h3>
-    <!-- Aquí se mostrará el resultado del QR -->
-    <p id="qrResult"></p>
     <!-- Vista previa de la cámara -->
     <div id="cameraPreview">
       <video id="video" autoplay></video>
@@ -102,6 +99,8 @@
     <img id="capturedImage" alt="Capturada" />
     <!-- Botón volver a capturar -->
     <button id="reactivateButton">Volver a Capturar</button>
+    <!-- Aquí se mostrará el resultado del QR -->
+    <p id="qrResult"></p>
   </div>
 
   <!-- LÓGICA -->
@@ -144,6 +143,8 @@
     });
 
     reactivateButton.addEventListener("click", () => {
+      qrResult.style.display = "none";
+      capturedImage.style.display = "none";
       cameraPreview.style.display = "block";
       captureButton.style.display = "block";
       reactivateButton.style.display = "none";
@@ -251,6 +252,7 @@
       // Muestra la imagen capturada
       // capturedImage.src = imageDataURL;
       // capturedImage.style.display = "block";
+      // qrResult.style.display = "block";
 
       // --------------------  TESTING  --------------------
       // Capturar imagen random:
@@ -258,6 +260,7 @@
       const imageDataURL = randomImageFilePath;
       capturedImage.src = randomImageFilePath;
       capturedImage.style.display = "block";
+      qrResult.style.display = "block";
       // ---------------------------------------------------
 
       capturedImage.onload = () => {
@@ -284,7 +287,14 @@
     }
 
     function extraerLineasRequeridas(texto) {
-      const lineasRequeridas = texto.filter((linea) => linea.includes('<<<<<<'));
+      const lineas = texto.split('\n');
+      const lineasRequeridas = lineas
+        .filter((linea) => linea.includes('<<<<<<'))
+        .map((linea) => {
+          const indiceEspacio = linea.indexOf(" ");
+          return indiceEspacio !== -1 ? linea.substring(0, indiceEspacio) : linea;
+        });
+      console.log(lineasRequeridas.slice(0, 3));
       return lineasRequeridas.slice(0, 3);
     }
 
@@ -300,7 +310,7 @@
         } else if (data && data.text !== undefined) {
           // qrResult.textContent = `Texto extraído: ${data.text}`;
           const lineasRequeridas = extraerLineasRequeridas(data.text);
-          qrResult.textContent = `Texto extraído: ${lineasRequeridas}`;
+          // qrResult.textContent = `Texto extraído: ${lineasRequeridas}`;
         } else {
           qrResult.textContent = "No se pudo extraer texto de la imagen.";
         }
