@@ -230,15 +230,16 @@
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
         // Convierte la imagen a base64
-        const imageDataURL = canvas.toDataURL("image/png");
+        // const imageDataURL = canvas.toDataURL("image/png");
 
         // Muestra la imagen capturada
-        capturedImage.src = imageDataURL;
-        capturedImage.style.display = "block";
+        // capturedImage.src = imageDataURL;
+        // capturedImage.style.display = "block";
 
         // --------------------  TESTING  --------------------
         // Capturar imagen random:
         const randomImageFilePath = getRandomImage();
+        const imageDataURL = randomImageFilePath;
         capturedImage.src = randomImageFilePath;
         capturedImage.style.display = "block";
         // ---------------------------------------------------
