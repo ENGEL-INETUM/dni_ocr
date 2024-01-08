@@ -5,10 +5,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- v5 -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    integrity="sha512-..." />
+    integrity="sha512-..." /> -->
+
+  <script src="./lib/tesseract.min.js"></script>
+  <script src="./lib/mobile-detect.min.js"></script>
+  <script src="./lib/all.min.js"></script>
+  <link rel="stylesheet" href="./lib/all.min.css">
+
   <title>Escáner de DNI y Lector de QR</title>
   <style>
     body {
@@ -75,6 +81,15 @@
       overflow-clip-margin: content-box;
       overflow: clip;
     }
+
+    #loading-message {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    
   </style>
 </head>
 
@@ -95,6 +110,8 @@
     <button id="captureButton">
       <i class="fas fa-camera"></i>
     </button>
+    <!-- Loading -->
+    <img id="loading-message" src="./loading.gif" alt="Cargando..." />
     <!-- Imagen capturada -->
     <img id="capturedImage" alt="Capturada" />
     <!-- Botón volver a capturar -->
@@ -294,28 +311,40 @@
           const indiceEspacio = linea.indexOf(" ");
           return indiceEspacio !== -1 ? linea.substring(0, indiceEspacio) : linea;
         });
+      // Nueva validación para retornar un string vacío
+      if (lineasRequeridas.some((linea) => linea.length < 30)) {
+        return ''; // Retorna un string vacío
+      }
       console.log(lineasRequeridas.slice(0, 3));
       return lineasRequeridas.slice(0, 3);
     }
 
     function performOCR(imageDataURL) {
+      const loadingMessage = document.getElementById("loading-message");
+      loadingMessage.style.display = "block";
       Tesseract.recognize(
         imageDataURL,
         "spa", // Cambia 'eng' por el código del idioma correspondiente
         { logger: (info) => console.log(info) }
       ).then(({ data, error }) => {
+        loadingMessage.style.display = "none";
         if (error) {
           console.error("Error en Tesseract:", error);
           qrResult.textContent = "Error al procesar la imagen.";
         } else if (data && data.text !== undefined) {
-          // qrResult.textContent = `Texto extraído: ${data.text}`;
           const lineasRequeridas = extraerLineasRequeridas(data.text);
-          // qrResult.textContent = `Texto extraído: ${lineasRequeridas}`;
+          if (lineasRequeridas.length > 0) {
+            const textoConcatenado = lineasRequeridas.join('\n');
+            alert(`Texto extraído:\n${textoConcatenado}`);
+          } else {
+            alert('Volver a tomar fotografía');
+          }
         } else {
           qrResult.textContent = "No se pudo extraer texto de la imagen.";
         }
       });
     }
+
   </script>
 </body>
 
