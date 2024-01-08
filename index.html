@@ -102,6 +102,7 @@
       <button id="reactivateButton">Volver a Capturar</button>
     </div>
 
+    <!-- LÓGICA -->
     <script>
       const md = new MobileDetect(window.navigator.userAgent);
       const isTablet = md.tablet();
@@ -145,6 +146,27 @@
         captureButton.style.display = "block";
         reactivateButton.style.display = "none";
       });
+
+      // --------------------  TESTING  --------------------
+      // Función para obtener una imagen aleatoria de la carpeta 'DNI'
+      function getRandomImage() {
+        const images = [
+          'DNI/dni (1).jpg',
+          'DNI/dni (2).jpg',
+          'DNI/dni (3).jpg',
+          'DNI/dni (4).jpg',
+          'DNI/dni (5).jpg',
+          'DNI/dni (6).jpg',
+          'DNI/dni (7).jpg',
+          'DNI/dni (8).jpg',
+          'DNI/dni (9).jpg',
+          'DNI/dni (10).jpg',
+          'DNI/dni (11).jpg',
+        ];
+        const randomIndex = Math.floor(Math.random() * images.length);
+        return images[randomIndex];
+      }
+      // ---------------------------------------------------
 
       qrScanner.addEventListener("click", () => {
         if (isTablet || isMobile) {
@@ -213,6 +235,13 @@
         // Muestra la imagen capturada
         capturedImage.src = imageDataURL;
         capturedImage.style.display = "block";
+
+        // --------------------  TESTING  --------------------
+        // Capturar imagen random:
+        const randomImageFilePath = getRandomImage();
+        capturedImage.src = randomImageFilePath;
+        capturedImage.style.display = "block";
+        // ---------------------------------------------------
 
         capturedImage.onload = () => {
           // Oculta el canvas de captura de imagen después de cargar la imagen
