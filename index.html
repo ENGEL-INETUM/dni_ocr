@@ -244,6 +244,7 @@
       // context.drawImage(video, 0, 0, desiredWidth, desiredHeight);
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
+      // TODO: se han comentado para hacer el testing:
       // Convierte la imagen a base64
       // const imageDataURL = canvas.toDataURL("image/png");
 
@@ -282,6 +283,11 @@
       return "12345678";
     }
 
+    function extraerLineasRequeridas(texto) {
+      const lineasRequeridas = texto.filter((linea) => linea.includes('<<<<<<'));
+      return lineasRequeridas.slice(0, 3);
+    }
+
     function performOCR(imageDataURL) {
       Tesseract.recognize(
         imageDataURL,
@@ -292,7 +298,9 @@
           console.error("Error en Tesseract:", error);
           qrResult.textContent = "Error al procesar la imagen.";
         } else if (data && data.text !== undefined) {
-          qrResult.textContent = `Texto extraído: ${data.text}`;
+          // qrResult.textContent = `Texto extraído: ${data.text}`;
+          const lineasRequeridas = extraerLineasRequeridas(data.text);
+          qrResult.textContent = `Texto extraído: ${lineasRequeridas}`;
         } else {
           qrResult.textContent = "No se pudo extraer texto de la imagen.";
         }
